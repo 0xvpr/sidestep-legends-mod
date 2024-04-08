@@ -1,7 +1,7 @@
-PROJECT = ssl
+PROJECT = ssl_mod
 
 CXX      = x86_64-w64-mingw32-g++-posix
-CXXFLAGS = -Ofast -std=c++2a -static \
+CXXFLAGS = -Ofast -std=c++2a \
            -Iinclude \
            -Wall -Wextra -Werror -Wshadow -Wpedantic -Wconversion \
 		   -fPIE -funsafe-math-optimizations -fomit-frame-pointer \
@@ -10,8 +10,8 @@ CXXFLAGS = -Ofast -std=c++2a -static \
            -fno-ident -fvisibility=hidden -fstrict-aliasing \
 		   -DVC_EXTRALEAN -DWIN32_LEAN_AND_MEAN
 
-LD      = x86_64-w64-mingw32-g++-posix
-LDFLAGS = -shared -s $(addprefix -l,ws2_32)
+LD      = x86_64-w64-mingw32-ld
+LDFLAGS = -static -shared -s --entry=DllMain $(addprefix -l,kernel32 user32)
 
 SOURCES = $(wildcard src/*.cpp)
 OBJECTS = $(patsubst src/%.cpp,build/%.obj,$(SOURCES))

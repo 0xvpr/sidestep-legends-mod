@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-python3.exe -m vpr-pidjeon.inject SidestepLegends.exe lib/ssl.dll
+python3.exe -m vpr-pidjeon.inject SidestepLegends.exe lib/ssl_mod.dll

@@ -2,27 +2,23 @@
 
 #include <processthreadsapi.h>
 #include <libloaderapi.h>
-#include <synchapi.h>
-#include <windef.h>
 
+#include <windef.h>
 #include <winuser.h>
 
-#include <atomic>
-
-std::atomic<bool> button_thread_running = true;
-
-unsigned button_thread(modifications::mod* m) {
+unsigned button_thread(modifications::handler_ptr handler) {
     bool godmode_enabled = false;
-    while (button_thread_running) {
+
+    while (handler->thread_running) {
         if ((GetAsyncKeyState('T') & 1)) {
-            m->blink();
+            handler->m.blink();
         }
         if ((GetAsyncKeyState('M') & 1)) {
-            m->max_stats();
+            handler->m.max_stats();
         }
 
         if ((GetAsyncKeyState('G') & 1)) {
-            m->toggle_godmode(godmode_enabled);
+            handler->m.toggle_godmode(godmode_enabled);
         }
     }
 
@@ -33,13 +29,17 @@ unsigned main_thread(HINSTANCE instance) {
     uintptr_t base_addr = (uintptr_t)GetModuleHandleA(nullptr);
 
     modifications::mod m{base_addr};
-    HANDLE button_thread_handle = CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)button_thread, &m, 0, nullptr);
+    modifications::handler button_handler{
+        .thread_running = true,
+        .m = m
+    };
 
+    HANDLE button_thread_handle = CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)button_thread, &button_handler, 0, nullptr);
     while (!(GetAsyncKeyState(VK_SPACE) & 1)) {
-
+        // spacebar to end
     }
 
-    button_thread_running = false;
+    button_handler.thread_running = false;
 
     WaitForSingleObject(button_thread_handle, INFINITE);
     FreeLibraryAndExitThread(instance, 0);
@@ -53,5 +53,5 @@ bool DllMain(HINSTANCE instance, DWORD reason, LPVOID _reserved) {
         CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)main_thread, instance, 0, nullptr);
     }
 
-    return true;
+    return 1;
 }
