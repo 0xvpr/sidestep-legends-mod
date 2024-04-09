@@ -4,11 +4,11 @@ CXX      = x86_64-w64-mingw32-g++-posix
 CXXFLAGS = -Ofast -std=c++2a \
            -Iinclude \
            -Wall -Wextra -Werror -Wshadow -Wpedantic -Wconversion \
-		   -fPIE -funsafe-math-optimizations -fomit-frame-pointer \
+           -fPIE -funsafe-math-optimizations -fomit-frame-pointer \
            -funroll-loops -funsafe-loop-optimizations -funswitch-loops -floop-parallelize-all \
            -finline-functions -falign-functions -falign-loops -falign-jumps -fno-function-sections \
            -fno-ident -fvisibility=hidden -fstrict-aliasing \
-		   -DVC_EXTRALEAN -DWIN32_LEAN_AND_MEAN
+           -DVC_EXTRALEAN -DWIN32_LEAN_AND_MEAN
 
 LD      = x86_64-w64-mingw32-ld
 LDFLAGS = -static -shared --strip-all --stack=65536 --entry=DllMain $(addprefix -l,kernel32 user32)
