@@ -20,7 +20,7 @@ public:
     mod(const mod&& other) = delete;
     mod& operator = (const mod&& other) = delete;
 
-    mod(uintptr_t base_addr) noexcept
+    explicit mod(uintptr_t base_addr) noexcept
       : base_addr_{ base_addr }
       , c{ base_addr_ }
       , s{ base_addr_ }
