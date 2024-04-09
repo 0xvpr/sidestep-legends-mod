@@ -11,7 +11,7 @@ CXXFLAGS = -Ofast -std=c++2a \
 		   -DVC_EXTRALEAN -DWIN32_LEAN_AND_MEAN
 
 LD      = x86_64-w64-mingw32-ld
-LDFLAGS = -static -shared -s --entry=DllMain $(addprefix -l,kernel32 user32)
+LDFLAGS = -static -shared --strip-all --stack=65536 --entry=DllMain $(addprefix -l,kernel32 user32)
 
 SOURCES = $(wildcard src/*.cpp)
 OBJECTS = $(patsubst src/%.cpp,build/%.obj,$(SOURCES))
@@ -20,21 +20,24 @@ HEADERS = $(wildcard include/*.hpp)
 
 all: target
 target: $(PROJECT)
+$(PROJECT): lib/$(PROJECT).dll
 
-$(PROJECT): bin build lib $(OBJECTS)
-	$(LD) $(OBJECTS) $(LDFLAGS) -o lib/$(PROJECT).dll
+lib/$(PROJECT).dll: bin build lib $(OBJECTS)
+	$(LD) $(OBJECTS) $(LDFLAGS) -o $@
 
 $(OBJECTS): build/%.obj : src/%.cpp $(HEADERS)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-.PHONY: bin
+.PHONY: clean
+clean:
+	rm -fr ./lib/*.dll
+	rm -fr ./build/*.obj
+
 bin:
 	mkdir -p bin
 
-.PHONY: build
 build:
 	mkdir -p build
 
-.PHONY: lib
 lib:
 	mkdir -p lib

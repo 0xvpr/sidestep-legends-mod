@@ -2,9 +2,9 @@
 #define   SSL_MODIFICATIONS_HEADER
 
 #include  "definitions.hpp"
+#include  "patches.hpp"
 #include  "offsets.hpp"
 #include  "types.hpp"
-#include  "patches.hpp"
 
 #include  "vpr/deviate.h"
 
@@ -57,7 +57,7 @@ private:
 
 typedef struct _handler {
     std::atomic<bool> thread_running;
-    modifications::mod& m;
+    modifications::mod& mod;
 } handler, *handler_ptr;
 
 } // namespace modifications

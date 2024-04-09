@@ -19,6 +19,8 @@ constexpr std::uint32_t current_health         = 0x5B2DEC;
 
 constexpr std::uint32_t godmode_func           = 0x1BF1E6;
 
+constexpr std::uint32_t minion_kill_count      = 0x44165D8;
+
 } // namespace bases
 } // namespace offsets
 

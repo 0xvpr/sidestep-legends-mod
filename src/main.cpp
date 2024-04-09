@@ -11,14 +11,14 @@ unsigned button_thread(modifications::handler_ptr handler) {
 
     while (handler->thread_running) {
         if ((GetAsyncKeyState('T') & 1)) {
-            handler->m.blink();
+            handler->mod.blink();
         }
         if ((GetAsyncKeyState('M') & 1)) {
-            handler->m.max_stats();
+            handler->mod.max_stats();
         }
 
         if ((GetAsyncKeyState('G') & 1)) {
-            handler->m.toggle_godmode(godmode_enabled);
+            handler->mod.toggle_godmode(godmode_enabled);
         }
     }
 
@@ -28,15 +28,15 @@ unsigned button_thread(modifications::handler_ptr handler) {
 unsigned main_thread(HINSTANCE instance) {
     uintptr_t base_addr = (uintptr_t)GetModuleHandleA(nullptr);
 
-    modifications::mod m{base_addr};
+    modifications::mod mod{base_addr};
     modifications::handler button_handler{
         .thread_running = true,
-        .m = m
+        .mod = mod
     };
 
     HANDLE button_thread_handle = CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)button_thread, &button_handler, 0, nullptr);
     while (!(GetAsyncKeyState(VK_SPACE) & 1)) {
-        // spacebar to end
+
     }
 
     button_handler.thread_running = false;
