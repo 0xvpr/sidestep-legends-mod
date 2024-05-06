@@ -58,6 +58,7 @@ private:
 typedef struct _handler {
     std::atomic<bool> thread_running;
     modifications::mod& mod;
+    HINSTANCE instance;
 } handler, *handler_ptr;
 
 } // namespace modifications
